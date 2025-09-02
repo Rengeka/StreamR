@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36203.30 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StreamR", "StreamR\StreamR.csproj", "{28D99162-2C61-4213-98F8-F3746A2C164A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{28D99162-2C61-4213-98F8-F3746A2C164A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{28D99162-2C61-4213-98F8-F3746A2C164A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{28D99162-2C61-4213-98F8-F3746A2C164A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{28D99162-2C61-4213-98F8-F3746A2C164A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0D36D527-E809-4A6E-8F04-10D5402A8592}
+	EndGlobalSection
+EndGlobal
