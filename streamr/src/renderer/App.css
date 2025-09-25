@@ -1,0 +1,13 @@
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+}
+
+button {
+  background-color: var(--color-accent);
+  color: var(--color-bg);
+}
+
+button:hover {
+  background-color: var(--color-accent-hover);
+}
