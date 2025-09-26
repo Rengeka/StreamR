@@ -1,10 +1,13 @@
 :root {
-  --color-bg: #121212;
-  --color-bg-secondary: #1E1E1E;
-  --color-text: #E0E0E0;
-  --color-text-secondary: #9E9E9E;
-  --color-accent: #FF6F00;
-  --color-accent-hover: #FFA000;
-  --color-error: #FF3D00;
-  --color-border: #2C2C2C;
+  --color-bg: #0D0D0D;                
+  --color-bg-secondary: #1A1A1A;       
+  --color-text: #E5FFE5;        
+  --color-text-secondary: #77ff77;   
+  --color-text-hover: #00FFAE;               
+  --color-accent: #00FFAE;             
+  --color-accent-hover: #00cc8f;     
+  --color-error: #FF4444;             
+  --color-border: #2A2A2A;   
+  
+  --font-family-base: 'Segoe UI', sans-serif;
 }

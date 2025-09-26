@@ -14,6 +14,8 @@ import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
+import dgram from 'dgram';
+import { TuspPackage, TuspMessageType } from '../clients/tusp/tusp-package';
 
 class AppUpdater {
   constructor() {
@@ -25,10 +27,80 @@ class AppUpdater {
 
 let mainWindow: BrowserWindow | null = null;
 
-ipcMain.on('ipc-example', async (event, arg) => {
-  const msgTemplate = (pingPong: string) => `IPC test: ${pingPong}`;
-  console.log(msgTemplate(arg));
-  event.reply('ipc-example', msgTemplate('pong'));
+ipcMain.handle('tusp-init', async (_, host: string, port: number) => {
+  const client = dgram.createSocket('udp4');
+  const pkg = new TuspPackage();
+  pkg.sessionId = 0;
+  pkg.messageType = TuspMessageType.Init;
+  pkg.sequenceNumber = 0;
+  pkg.payload = new Uint8Array();
+
+  const message = pkg.serialize(); // Uint8Array
+  const buffer = Buffer.from(message); // Node.js Buffer
+
+  return new Promise((resolve, reject) => {
+    client.send(buffer, port, host, (err) => {
+      if (err) reject(err);
+      else {
+        client.once('message', (msg) => {
+          resolve(msg.toString());
+        });
+      }
+    });
+  });
+});
+
+ipcMain.handle('tusp-ping', async (_, host: string, port: number) => {
+  const client = dgram.createSocket('udp4');
+  const results: string[] = [];
+
+  const sendPing = (index: number): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const pkg = new TuspPackage();
+      pkg.sessionId = 0;
+      pkg.messageType = TuspMessageType.Ping;
+      pkg.sequenceNumber = index;
+      pkg.payload = new Uint8Array();
+
+      const message = pkg.serialize();
+      const buffer = Buffer.from(message);
+      const timeoutMs = 2000;
+
+      const start = Date.now();
+      client.send(buffer, port, host, (err) => {
+        if (err) {
+          resolve(`[Ping ${index}] Error sending: ${err.message}`);
+          return;
+        }
+
+        const timer = setTimeout(() => {
+          resolve(`[Ping ${index}] Request timed out.`);
+        }, timeoutMs);
+
+        client.once('message', (msg) => {
+          clearTimeout(timer);
+
+          try {
+            const responsePkg = TuspPackage.deserialize(msg);
+            const payloadStr = Buffer.from(responsePkg.payload).toString('utf-8');
+            const elapsed = Date.now() - start;
+
+            resolve(`[Ping ${index}] Reply in ${elapsed} ms: ${payloadStr}`);
+          } catch (e) {
+            resolve(`[Ping ${index}] Failed to parse response`);
+          }
+        });
+      });
+    });
+  };
+
+  for (let i = 1; i <= 4; i++) {
+    const result = await sendPing(i);
+    results.push(result);
+  }
+
+  client.close();
+  return results;
 });
 
 if (process.env.NODE_ENV === 'production') {
@@ -73,6 +145,13 @@ const createWindow = async () => {
     show: false,
     width: 1024,
     height: 728,
+
+    /*width: 1024,
+    height: 728,
+    frame: false, 
+    titleBarStyle: 'hidden', 
+    backgroundColor: '#121212',*/
+
     icon: getAssetPath('icon.png'),
     webPreferences: {
       preload: app.isPackaged
@@ -99,6 +178,7 @@ const createWindow = async () => {
   });
 
   const menuBuilder = new MenuBuilder(mainWindow);
+  mainWindow.setMenu(null);
   menuBuilder.buildMenu();
 
   // Open urls in the user's browser
@@ -135,3 +215,13 @@ app
     });
   })
   .catch(console.log);
+
+
+declare global {
+  interface Window {
+    tusp: {
+      init: (host: string, port: number) => Promise<string>;
+      ping: (host: string, pong: number) => Promise<string>;
+    };
+  }
+}

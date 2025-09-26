@@ -1,0 +1,16 @@
+.suggested-streams h2 {
+    margin-bottom: 1rem;
+}
+
+.stream-grid {
+    display: flex;
+    gap: 1rem;
+}
+
+.stream-card {
+    background: #1f1f1f;
+    padding: 1rem;
+    border-radius: 8px;
+    flex: 1;
+    text-align: center;
+}

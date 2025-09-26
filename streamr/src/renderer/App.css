@@ -1,6 +1,28 @@
 body {
   background-color: var(--color-bg);
   color: var(--color-text);
+  font-family: var(--font-family-base);
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  background: var(--color-bg-secondary);
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 1.8rem;
+  color: var(--color-accent);
+}
+
+main {
+    flex: 1;
+    padding: 2rem;
 }
 
 button {
@@ -10,4 +32,23 @@ button {
 
 button:hover {
   background-color: var(--color-accent-hover);
+}
+
+nav a {
+  margin-left: 1rem;
+  text-decoration: none;
+  color: var(--color-text);
+  transition: color 0.3s;
+}
+
+nav a:hover {
+  color: var(--color-text-hover);
+}
+
+.page {
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }

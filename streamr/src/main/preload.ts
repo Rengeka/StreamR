@@ -26,4 +26,9 @@ const electronHandler = {
 
 contextBridge.exposeInMainWorld('electron', electronHandler);
 
+contextBridge.exposeInMainWorld('tusp', {
+  init: (host: string, port: number) => ipcRenderer.invoke('tusp-init', host, port),
+  ping: (host: string, port: number) => ipcRenderer.invoke('tusp-ping', host, port),
+});
+
 export type ElectronHandler = typeof electronHandler;
